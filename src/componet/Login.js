@@ -1,6 +1,9 @@
 import { Button } from "react-bootstrap";
 import {FcGoogle} from 'react-icons/fc'
+import { Link } from "react-router-dom";
 import login from '../images/image.svg'
+import '../index.css';
+
 
 const Login = () => {
     return (
@@ -30,14 +33,14 @@ const Login = () => {
 
                     <div className="login-footer">
                         <label >New to Chat? </label>
-                        <a>SIGN UP</a>
+                        <Link to="/register">SIGN UP</Link>
                     </div>
                 </div>
          
             </div>
 
             <div className="image-container">
-                    <img src={login} className="img-fluid" alt="login image" />
+                    <img src={login} className="img-fluid" alt="login-people" />
                 </div>
 
         </section>
