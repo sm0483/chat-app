@@ -3,9 +3,45 @@ import {FcGoogle} from 'react-icons/fc'
 import login from '../images/image.svg'
 import '../register.css';
 import { Link } from "react-router-dom";
-import {CgProfile} from 'react-icons/cg'
+import { useState } from "react";
+import { useAuthContext} from "../context/AuthContext"
+
+
+//test
+
+
 
 const Register = () => {
+
+    const [name,setName]=useState("");
+    const [email,setEmail]=useState("");
+    const [img,setImg]=useState(null);
+    const [password,setPassword]=useState("");
+    const {createUserEmail,loginWithGoogle}=useAuthContext();
+
+    const handleSumbit=async(e)=>{
+        e.preventDefault();
+        try{
+            const user=await createUserEmail(email,password,);
+            console.log(user.user);
+            //handler user from here
+
+        }catch(err){
+            console.log(err);
+        }
+    }
+
+
+    const googleLogin=async()=>{
+        try{
+            const result=await loginWithGoogle();
+            console.log(result);
+            //handler user from here
+        }catch(err){
+            console.log(err);
+        }
+    }
+
     return (
         <section className="login-container">
         <div className="main-head">
@@ -14,23 +50,19 @@ const Register = () => {
                 <h2>See your friends</h2>
             </div>
             <div className="button-container">
-                <Button><FcGoogle/></Button>
+                <Button onClick={()=>googleLogin()}><FcGoogle/></Button>
             </div>
 
             <div className="details-container">
-                <form >
-                    <label htmlFor="id">Name</label>
-                    <input type="name" id="id" placeholder="Jhon"/>
-                    <label htmlFor="id">Email</label>
-                    <input type="email" id="id" placeholder="abc@gmail.com"/>
-                    <label htmlFor="id">Password</label>
-                    <input type="password" id="id" placeholder="Cat@1208"/>
-                    <div className="image-upload">
-                        <form>
-                            <input type="file" id="myFile" name="filename"/>
-                            <Button type="submit">Upload</Button>
-                        </form>
-                    </div>    
+                <form onSubmit={(e)=>handleSumbit(e)}>
+                    <label htmlFor="name">Name</label>
+                    <input type="name" id="name" placeholder="Jhon" onChange={(e)=>setName(e.target.value)} value={name}/>
+                    <label htmlFor="email">Email</label>
+                    <input type="email" id="email" placeholder="abc@gmail.com" onChange={(e)=>setEmail(e.target.value)} value={email}/>
+                    <label htmlFor="pass">Password</label>
+                    <input type="current-password" id="pass" placeholder="Cat@1208" onChange={(e)=>setPassword(e.target.value)} value={password}/>
+                    <input type="file" id="myFile" name="filename" onChange={(e)=>setImg(e.target.value)} />
+
                     <div className="details-footer">
                         <input type="checkbox" id='id' />
                         <label htmlFor="id">Remember me</label>

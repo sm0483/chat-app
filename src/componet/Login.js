@@ -22,13 +22,13 @@ const Login = () => {
 
                 <div className="details-container">
                     <form >
-                        <label htmlFor="id">Email</label>
-                        <input type="email" id="id" placeholder="abc@gmail.com"/>
-                        <label htmlFor="id">Password</label>
-                        <input type="password" id="id" placeholder="abc@gmail.com"/>
+                        <label htmlFor="email">Email</label>
+                        <input type="email" id="email" placeholder="abc@gmail.com"/>
+                        <label htmlFor="password">Password</label>
+                        <input type="password" id="password" placeholder="cat@2001"/>
                         <div className="details-footer">
-                            <input type="checkbox" id='id' />
-                            <label htmlFor="id">Remember me</label>
+                            <input type="checkbox" id='box' />
+                            <label htmlFor="box">Remember me</label>
                             <a href="#forget">Forget Password</a>
                         </div>
                         <Button type="submit">Login</Button>
