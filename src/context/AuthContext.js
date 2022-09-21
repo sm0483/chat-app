@@ -1,37 +1,28 @@
 import {auth} from '../firebase'
-import { createUserWithEmailAndPassword,signInWithPopup,GoogleAuthProvider } from 'firebase/auth'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import React from 'react';
-
+import { onAuthStateChanged } from 'firebase/auth';
 const AuthContext=React.createContext();
 
 const AuthProvider=({children})=>{
-    const [logedIn,setLogedIn]=useState(false);
-    const [err,setErr]=useState(false);
 
-    const createUserEmail=async(email,password)=>{
-        try{
-            return await createUserWithEmailAndPassword(auth,email,password);
-        }catch(err){
-            setErr(true);
-        }
-    }
-    const provider=new GoogleAuthProvider();
+    const [currentUser,setCurrentUser]=useState("");
 
-    const loginWithGoogle=async()=>{
-        try{
-         return await signInWithPopup(auth,provider);
-         setErr(false)
-        }catch(err){
-            setErr(true);
+    useEffect(()=>{
+        const unsub=onAuthStateChanged(auth,(user)=>{
+            setCurrentUser(user);
+            console.log(user);
+        })
+
+        return ()=>{
+            unsub();
         }
-    }
+    },[])
 
     return(
         <AuthContext.Provider
         value={{
-            createUserEmail,
-            loginWithGoogle
+            currentUser
         }}
         >
             {children}

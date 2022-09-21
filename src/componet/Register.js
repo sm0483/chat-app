@@ -4,7 +4,8 @@ import login from '../images/image.svg'
 import '../register.css';
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { useAuthContext} from "../context/AuthContext"
+import { createUserWithEmailAndPassword ,GoogleAuthProvider,signInWithPopup} from "firebase/auth";
+import {auth} from '../firebase'
 
 
 //test
@@ -17,28 +18,32 @@ const Register = () => {
     const [email,setEmail]=useState("");
     const [img,setImg]=useState(null);
     const [password,setPassword]=useState("");
-    const {createUserEmail,loginWithGoogle}=useAuthContext();
+    const [err,setErr]=useState(false);
+
+
 
     const handleSumbit=async(e)=>{
         e.preventDefault();
+        console.log(img);
         try{
-            const user=await createUserEmail(email,password,);
-            console.log(user.user);
+            const user=await createUserWithEmailAndPassword(auth,email,password,);
+            console.log(user);
             //handler user from here
 
         }catch(err){
             console.log(err);
+            setErr(true)
         }
     }
 
+    const provider=new GoogleAuthProvider();
 
-    const googleLogin=async()=>{
+    const loginWithGoogle=async()=>{
         try{
-            const result=await loginWithGoogle();
-            console.log(result);
-            //handler user from here
+         const result=await signInWithPopup(auth,provider);
+         setErr(false)
         }catch(err){
-            console.log(err);
+            setErr(true);
         }
     }
 
@@ -50,7 +55,7 @@ const Register = () => {
                 <h2>See your friends</h2>
             </div>
             <div className="button-container">
-                <Button onClick={()=>googleLogin()}><FcGoogle/></Button>
+                <Button onClick={()=>loginWithGoogle()}><FcGoogle/></Button>
             </div>
 
             <div className="details-container">
@@ -60,7 +65,7 @@ const Register = () => {
                     <label htmlFor="email">Email</label>
                     <input type="email" id="email" placeholder="abc@gmail.com" onChange={(e)=>setEmail(e.target.value)} value={email}/>
                     <label htmlFor="pass">Password</label>
-                    <input type="current-password" id="pass" placeholder="Cat@1208" onChange={(e)=>setPassword(e.target.value)} value={password}/>
+                    <input type="password" id="pass" placeholder="Cat@1208" onChange={(e)=>setPassword(e.target.value)} value={password}/>
                     <input type="file" id="myFile" name="filename" onChange={(e)=>setImg(e.target.value)} />
 
                     <div className="details-footer">
