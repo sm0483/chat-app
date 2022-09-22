@@ -1,7 +1,8 @@
 import { Button } from "react-bootstrap";
 import {FcGoogle} from 'react-icons/fc'
 import login from '../images/image.svg'
-import '../register.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../index.css';
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { createUserWithEmailAndPassword ,GoogleAuthProvider,signInWithPopup} from "firebase/auth";
