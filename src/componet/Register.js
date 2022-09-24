@@ -3,10 +3,12 @@ import {FcGoogle} from 'react-icons/fc'
 import login from '../images/image.svg'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { createUserWithEmailAndPassword ,GoogleAuthProvider,signInWithPopup} from "firebase/auth";
-import {auth} from '../firebase'
+import { createUserWithEmailAndPassword ,GoogleAuthProvider,signInWithPopup, updateProfile} from "firebase/auth";
+import {storage} from '../firebase'
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { auth } from "../firebase";
 
 
 //test
@@ -15,6 +17,7 @@ import {auth} from '../firebase'
 
 const Register = () => {
 
+    const navigate=useNavigate();
     const [name,setName]=useState("");
     const [email,setEmail]=useState("");
     const [img,setImg]=useState(null);
@@ -22,14 +25,22 @@ const Register = () => {
     const [err,setErr]=useState(false);
 
 
+    //create a image ref
 
     const handleSumbit=async(e)=>{
         e.preventDefault();
-        console.log(img);
         try{
-            const user=await createUserWithEmailAndPassword(auth,email,password,);
-            console.log(user);
-            //handler user from here
+            const user=await createUserWithEmailAndPassword(auth,email,password,); //create user 
+            //user.user.uid // print id of the user
+            const imageRef=ref(storage,`images/${user.user.uid}`); //create page for file upload
+            const imageUpload=await uploadBytes(imageRef,img); // update image 
+            const url=await getDownloadURL(imageUpload.ref); //download url
+            const profile=await updateProfile(auth.currentUser,{ //update that url current user
+                photoURL:url,
+                displayName:name
+
+            });         
+            navigate('/chat');
 
         }catch(err){
             console.log(err);
@@ -43,6 +54,7 @@ const Register = () => {
         try{
          const result=await signInWithPopup(auth,provider);
          setErr(false)
+         navigate('/chat');
         }catch(err){
             setErr(true);
         }
@@ -67,7 +79,7 @@ const Register = () => {
                     <input type="email" id="email" placeholder="abc@gmail.com" onChange={(e)=>setEmail(e.target.value)} value={email}/>
                     <label htmlFor="pass">Password</label>
                     <input type="password" id="pass" placeholder="Cat@1208" onChange={(e)=>setPassword(e.target.value)} value={password}/>
-                    <input type="file" id="myFile" name="filename" onChange={(e)=>setImg(e.target.value)} />
+                    <input type="file" id="myFile" name="filename" onChange={(e)=>setImg(e.target.files[0])} />
 
                     <div className="details-footer">
                         <input type="checkbox" id='id' />
@@ -78,7 +90,7 @@ const Register = () => {
 
                 <div className="login-footer">
                     <label >Have an account? </label>
-                    <Link to="/login">LOGIN</Link >
+                    <Link to="/">LOGIN</Link >
                 </div>
             </div>
      

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Button } from "react-bootstrap";
 import {FcGoogle} from 'react-icons/fc'
 import { Link } from "react-router-dom";
@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
 import { signInWithEmailAndPassword ,GoogleAuthProvider,signInWithPopup} from "firebase/auth";
 import {auth} from '../firebase'
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -16,11 +17,14 @@ const Login = () => {
     const [email,setEmail]=useState("");
     const [password,setPassword]=useState("");
     const [err,setErr]=useState(false);
+    const navigate=useNavigate();
+
 
     const getLogin=async(e)=>{
         e.preventDefault();
         const result=await signInWithEmailAndPassword(auth,email,password);
-        console.log(result);       
+        console.log(result);
+        navigate('/chat')     
     }
 
 
@@ -30,6 +34,7 @@ const Login = () => {
         try{
          const result=await signInWithPopup(auth,provider);
          setErr(false)
+         navigate('/chat')
         }catch(err){
             setErr(true);
         }

@@ -6,7 +6,7 @@ const AuthContext=React.createContext();
 
 const AuthProvider=({children})=>{
 
-    const [currentUser,setCurrentUser]=useState("");
+    const [currentUser,setCurrentUser]=useState({});
 
     useEffect(()=>{
         const unsub=onAuthStateChanged(auth,(user)=>{
@@ -22,7 +22,7 @@ const AuthProvider=({children})=>{
     return(
         <AuthContext.Provider
         value={{
-            currentUser
+            currentUser,
         }}
         >
             {children}
@@ -31,8 +31,6 @@ const AuthProvider=({children})=>{
 
 }
 
-const useAuthContext=()=>{
-    return useContext(AuthContext);
-}
 
-export  {useAuthContext,AuthProvider,AuthContext}
+
+export  {AuthProvider,AuthContext}
